@@ -1,4 +1,6 @@
 import React from 'react';
+import { getAPI } from './API';
+import { Post } from './interface';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -32,6 +34,22 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 const theme = createTheme();
 
 const App: React.FC = () => {
+  const [posts, setPosts] = React.useState<Post[]>([]);
+
+  const getData = () =>
+    getAPI().then((res) => {
+      if (res.status === 200) {
+        console.log('ohlala', res.data);
+        setPosts(res.data);
+      } else {
+        console.log(res);
+      }
+    });
+
+  React.useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -45,8 +63,8 @@ const App: React.FC = () => {
       <main>
         <Container sx={{ py: 8 }} maxWidth="md">
           <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
+            {posts.map((post) => (
+              <Grid item key={post.id} xs={12} sm={6} md={4}>
                 <Card
                   sx={{
                     height: '100%',
@@ -56,11 +74,11 @@ const App: React.FC = () => {
                 >
                   <CardContent sx={{ flexGrow: 1 }}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Heading
+                      {post.title}
                     </Typography>
                     <Typography>
-                      This is a media card. You can use this section to describe
-                      the content.
+                      {post.body.substring(0, 100) +
+                        (post.body.length > 100 ? '...' : '')}
                     </Typography>
                   </CardContent>
                   <CardActions>
