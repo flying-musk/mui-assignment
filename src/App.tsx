@@ -1,7 +1,9 @@
 import React from 'react';
 import { Copyright } from './Copyright';
 import { getAPI } from './API';
-import { Post, Comment, User } from './interface';
+import { PostDetails } from './PostDetails';
+import { UserDetails } from './UserDetails';
+import { Post, Comment, User, userTemplate } from './interface';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -12,7 +14,6 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -22,13 +23,17 @@ const theme = createTheme();
 
 const App: React.FC = () => {
   const [posts, setPosts] = React.useState<Post[]>([]);
-  const [users, setUsers] = React.useState<User[]>([]);
+  const [user, setUser] = React.useState<User>(userTemplate);
   const [comments, setComments] = React.useState<Comment[]>([]);
   const [postAmount, setPostAmount] = React.useState<number>(20);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
+  const [userName, setUserName] = React.useState<string>('');
+  const [email, setEmail] = React.useState<string>('');
   const [postTitle, setPostTitle] = React.useState<string>('');
   const [postBody, setPostBody] = React.useState<string>('');
+
+  const [isPostOpen, setIsPostOpen] = React.useState<boolean>(false);
+  const [isUserOpen, setIsUserOpen] = React.useState<boolean>(false);
 
   useBottomScrollListener(
     React.useCallback(() => {
@@ -48,7 +53,9 @@ const App: React.FC = () => {
     getAPI(`users/${userId}`).then((res) => {
       if (res.status === 200) {
         console.log('ohlala for user', res.data);
-        setUsers(res.data);
+        setUser(res.data);
+        setUserName(res.data.username);
+        setEmail(res.data.email);
       } else {
         console.log(res);
       }
@@ -61,7 +68,7 @@ const App: React.FC = () => {
         console.log(res);
       }
     });
-    setIsModalOpen(true);
+    setIsPostOpen(true);
   };
   const getPosts = () =>
     getAPI('posts/').then((res) => {
@@ -135,35 +142,28 @@ const App: React.FC = () => {
         >
           {isLoading ? <CircularProgress color="primary" /> : ''}
         </Container>
-        <Modal
-          open={isModalOpen}
+        <PostDetails
+          userName={userName}
+          email={email}
+          postTitle={postTitle}
+          postBody={postBody}
+          comments={comments}
+          isPostOpen={isPostOpen}
           onClose={() => {
-            setIsModalOpen(false);
+            setIsPostOpen(false);
           }}
-        >
-          <Box
-            sx={{
-              position: 'absolute' as 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: 400,
-              bgcolor: 'background.paper',
-              border: '2px solid #000',
-              boxShadow: 24,
-              p: 4,
-            }}
-          >
-            <Typography variant="h6" component="h2">
-              {postTitle}
-            </Typography>
-            <Typography sx={{ mt: 2 }}>{postBody}</Typography>
-            <Typography component="h6">users</Typography>
-            <Typography component="h6">{JSON.stringify(users)}</Typography>
-            <Typography component="h6">comments</Typography>
-            <Typography component="h6">{JSON.stringify(comments)}</Typography>
-          </Box>
-        </Modal>
+          userClicked={() => {
+            setIsPostOpen(false);
+            setIsUserOpen(true);
+          }}
+        />
+        <UserDetails
+          user={user}
+          isUserOpen={isUserOpen}
+          onClose={() => {
+            setIsUserOpen(false);
+          }}
+        />
       </main>
       <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
         <Copyright />

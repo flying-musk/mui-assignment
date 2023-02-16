@@ -18,9 +18,19 @@ export interface User {
   phone: string;
   username: string;
   website: string;
-  address: Address;
-  company: Company;
+  address?: Address;
+  company?: Company;
 }
+export const userTemplate: User = {
+  email: '',
+  id: -1,
+  name: '',
+  phone: '',
+  username: '',
+  website: '',
+  address: undefined,
+  company: undefined,
+};
 interface Geo {
   lat: string;
   lng: string;
