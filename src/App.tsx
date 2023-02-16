@@ -11,6 +11,7 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -36,6 +37,9 @@ const App: React.FC = () => {
   const [posts, setPosts] = React.useState<Post[]>([]);
   const [postAmount, setPostAmount] = React.useState<number>(20);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
+  const [postTitle, setPostTitle] = React.useState<string>('');
+  const [postBody, setPostBody] = React.useState<string>('');
 
   useBottomScrollListener(
     React.useCallback(() => {
@@ -71,7 +75,7 @@ const App: React.FC = () => {
       <AppBar position="relative">
         <Toolbar>
           <Typography variant="h6" color="inherit" noWrap>
-            Album layout
+            Posts
           </Typography>
         </Toolbar>
       </AppBar>
@@ -97,7 +101,16 @@ const App: React.FC = () => {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small">View</Button>
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        setPostTitle(post.title);
+                        setPostBody(post.body);
+                        setIsModalOpen(true);
+                      }}
+                    >
+                      View
+                    </Button>
                   </CardActions>
                 </Card>
               </Grid>
@@ -114,6 +127,31 @@ const App: React.FC = () => {
         >
           {isLoading ? <CircularProgress color="primary" /> : ''}
         </Container>
+        <Modal
+          open={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+          }}
+        >
+          <Box
+            sx={{
+              position: 'absolute' as 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: 400,
+              bgcolor: 'background.paper',
+              border: '2px solid #000',
+              boxShadow: 24,
+              p: 4,
+            }}
+          >
+            <Typography variant="h6" component="h2">
+              {postTitle}
+            </Typography>
+            <Typography sx={{ mt: 2 }}>{postBody}</Typography>
+          </Box>
+        </Modal>
       </main>
       <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
         <Copyright />
