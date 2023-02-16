@@ -1,7 +1,7 @@
 import React from 'react';
 import { Copyright } from './Copyright';
 import { getAPI } from './API';
-import { Post } from './interface';
+import { Post, Comment, User } from './interface';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -22,6 +22,8 @@ const theme = createTheme();
 
 const App: React.FC = () => {
   const [posts, setPosts] = React.useState<Post[]>([]);
+  const [users, setUsers] = React.useState<User[]>([]);
+  const [comments, setComments] = React.useState<Comment[]>([]);
   const [postAmount, setPostAmount] = React.useState<number>(20);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
@@ -42,10 +44,29 @@ const App: React.FC = () => {
     }, [postAmount])
   );
 
-  const getData = () =>
-    getAPI().then((res) => {
+  const getModalData = (userId: number, id: number) => {
+    getAPI(`users/${userId}`).then((res) => {
       if (res.status === 200) {
-        console.log('ohlala', res.data);
+        console.log('ohlala for user', res.data);
+        setUsers(res.data);
+      } else {
+        console.log(res);
+      }
+    });
+    getAPI(`posts/${id}/comments`).then((res) => {
+      if (res.status === 200) {
+        console.log('ohlala for comments', res.data);
+        setComments(res.data);
+      } else {
+        console.log(res);
+      }
+    });
+    setIsModalOpen(true);
+  };
+  const getPosts = () =>
+    getAPI('posts/').then((res) => {
+      if (res.status === 200) {
+        console.log('ohlala for posts', res.data);
         setPosts(res.data);
       } else {
         console.log(res);
@@ -53,7 +74,7 @@ const App: React.FC = () => {
     });
 
   React.useEffect(() => {
-    getData();
+    getPosts();
   }, []);
 
   return (
@@ -93,7 +114,7 @@ const App: React.FC = () => {
                       onClick={() => {
                         setPostTitle(post.title);
                         setPostBody(post.body);
-                        setIsModalOpen(true);
+                        getModalData(post.userId, post.id);
                       }}
                     >
                       View
@@ -137,6 +158,10 @@ const App: React.FC = () => {
               {postTitle}
             </Typography>
             <Typography sx={{ mt: 2 }}>{postBody}</Typography>
+            <Typography component="h6">users</Typography>
+            <Typography component="h6">{JSON.stringify(users)}</Typography>
+            <Typography component="h6">comments</Typography>
+            <Typography component="h6">{JSON.stringify(comments)}</Typography>
           </Box>
         </Modal>
       </main>
