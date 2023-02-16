@@ -1,6 +1,7 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { Comment } from './interface';
 
@@ -45,14 +46,21 @@ export const PostDetails: React.FC<PostDetailsProps> = ({
           overflow: 'auto',
         }}
       >
-        <Typography
-          component="h6"
-          sx={{ cursor: 'pointer' }}
+        <Button
+          size="small"
+          sx={{
+            textTransform: 'none',
+            justifyContent: 'flex-start',
+            textAlign: 'start',
+            padding: 0,
+          }}
           onClick={userClicked}
         >
-          <Typography component="p">User Name: {userName}</Typography>
-          <Typography component="p">Email: {email}</Typography>
-        </Typography>
+          <Typography component="h6">
+            <Typography component="p">User Name: {userName}</Typography>
+            <Typography component="p">Email: {email}</Typography>
+          </Typography>
+        </Button>
         <Typography variant="h6" component="h2">
           <Typography component="p">Title: {postTitle}</Typography>
           <Typography component="p">
@@ -64,8 +72,8 @@ export const PostDetails: React.FC<PostDetailsProps> = ({
         {comments.length > 0 ? (
           <Typography variant="h6" component="h2">
             {comments.map((comment, idx) => (
-              <Typography component="p" key={idx}>
-                <Typography component="h6">Comment {idx + 1}</Typography>
+              <Typography component="div" key={idx}>
+                <Typography component="div">Comment {idx + 1}</Typography>
                 <ul>
                   <li>email: {comment.email}</li>
                   <li>name: {comment.name}</li>

@@ -42,7 +42,6 @@ const App: React.FC = () => {
       }
       setIsLoading(true);
       setTimeout(() => {
-        console.log('hello mars time is up');
         setIsLoading(false);
         setPostAmount(postAmount + 20);
       }, 1000);
@@ -52,7 +51,7 @@ const App: React.FC = () => {
   const getModalData = (userId: number, id: number) => {
     getAPI(`users/${userId}`).then((res) => {
       if (res.status === 200) {
-        console.log('ohlala for user', res.data);
+        // console.log('ohlala for user', res.data);
         setUser(res.data);
         setUserName(res.data.username);
         setEmail(res.data.email);
@@ -62,7 +61,7 @@ const App: React.FC = () => {
     });
     getAPI(`posts/${id}/comments`).then((res) => {
       if (res.status === 200) {
-        console.log('ohlala for comments', res.data);
+        // console.log('ohlala for comments', res.data);
         setComments(res.data);
       } else {
         console.log(res);
@@ -73,7 +72,7 @@ const App: React.FC = () => {
   const getPosts = () =>
     getAPI('posts/').then((res) => {
       if (res.status === 200) {
-        console.log('ohlala for posts', res.data);
+        // console.log('ohlala for posts', res.data);
         setPosts(res.data);
       } else {
         console.log(res);
@@ -90,7 +89,7 @@ const App: React.FC = () => {
       <AppBar position="relative">
         <Toolbar>
           <Typography variant="h6" color="inherit" noWrap>
-            Posts
+            Material UI
           </Typography>
         </Toolbar>
       </AppBar>
@@ -162,6 +161,10 @@ const App: React.FC = () => {
           isUserOpen={isUserOpen}
           onClose={() => {
             setIsUserOpen(false);
+          }}
+          backClick={() => {
+            setIsUserOpen(false);
+            setIsPostOpen(true);
           }}
         />
       </main>

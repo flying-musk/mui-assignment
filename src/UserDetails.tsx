@@ -1,6 +1,7 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { User } from './interface';
 
@@ -8,12 +9,14 @@ interface UserDetailsProps {
   user: User;
   isUserOpen: boolean;
   onClose: () => void;
+  backClick: () => void;
 }
 
 export const UserDetails: React.FC<UserDetailsProps> = ({
   user,
   isUserOpen,
   onClose,
+  backClick,
 }) => {
   return (
     <Modal open={isUserOpen} onClose={onClose}>
@@ -28,6 +31,9 @@ export const UserDetails: React.FC<UserDetailsProps> = ({
           border: '2px solid #000',
           boxShadow: 24,
           p: 4,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
         }}
       >
         <Typography component="h6">
@@ -38,6 +44,9 @@ export const UserDetails: React.FC<UserDetailsProps> = ({
           <Typography component="p">Phone: {user.phone}</Typography>
           <Typography component="p">Website: {user.website}</Typography>
         </Typography>
+        <Button size="small" onClick={backClick}>
+          Back
+        </Button>
       </Box>
     </Modal>
   );
