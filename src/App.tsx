@@ -15,6 +15,7 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import CircularProgress from '@mui/material/CircularProgress';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 
 function Copyright() {
   return (
@@ -29,12 +30,26 @@ function Copyright() {
   );
 }
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-
 const theme = createTheme();
 
 const App: React.FC = () => {
   const [posts, setPosts] = React.useState<Post[]>([]);
+  const [postAmount, setPostAmount] = React.useState<number>(20);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+
+  useBottomScrollListener(
+    React.useCallback(() => {
+      if (postAmount === 100) {
+        return;
+      }
+      setIsLoading(true);
+      setTimeout(() => {
+        console.log('hello mars time is up');
+        setIsLoading(false);
+        setPostAmount(postAmount + 20);
+      }, 1000);
+    }, [postAmount])
+  );
 
   const getData = () =>
     getAPI().then((res) => {
@@ -63,7 +78,7 @@ const App: React.FC = () => {
       <main>
         <Container sx={{ py: 8 }} maxWidth="md">
           <Grid container spacing={4}>
-            {posts.map((post) => (
+            {posts.slice(0, postAmount).map((post) => (
               <Grid item key={post.id} xs={12} sm={6} md={4}>
                 <Card
                   sx={{
@@ -89,8 +104,17 @@ const App: React.FC = () => {
             ))}
           </Grid>
         </Container>
+        <Container
+          sx={{
+            height: 48,
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+          maxWidth="md"
+        >
+          {isLoading ? <CircularProgress color="primary" /> : ''}
+        </Container>
       </main>
-      {/* <CircularProgress color="primary" /> */}
       <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
         <Copyright />
       </Box>
