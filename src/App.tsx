@@ -1,4 +1,5 @@
 import React from 'react';
+import { Copyright } from './Copyright';
 import { getAPI } from './API';
 import { Post } from './interface';
 import AppBar from '@mui/material/AppBar';
@@ -13,23 +14,9 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
 import CircularProgress from '@mui/material/CircularProgress';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 const theme = createTheme();
 
